@@ -23,6 +23,8 @@ public class Constants {
     //dao.DoorDAOImpl
     public static String GET_DOORS_BY_SIZE_PATTERN = "select * from lesson8.doors where size between ? and ?";
 
+    public static String IN_FILE_PATH = "src/main/resources/?.json";
+
 //    //HouseApp
     public static final String HOUSES_IN_FILE_PATH = "src\\main\\resources\\houses.json";
     public static final String HOUSES_OUT_FILE_PATH = "src\\main\\resources\\housesWithId.json";

@@ -1,5 +1,6 @@
 package org.example.lesson8;
 
+import com.google.gson.reflect.TypeToken;
 import org.example.lesson8.connection.SQLConnection;
 import org.example.lesson8.dao.DAO;
 import org.example.lesson8.dao.DoorDAO;
@@ -10,26 +11,44 @@ import org.example.lesson8.utils.GsonManager;
 import org.example.lesson8.utils.wrappers.ThrowingConsumerWrapper;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static org.example.lesson8.utils.Constants.*;
 
-public class DoorsApp {
+public class TestAppRunner {
     private static final GsonManager GSON_MANAGER = new GsonManager();
     private static final DoorDAO DOORS_DAO = new DoorDAOImpl();
-    private static final DAO<DoorDTO> DAO = new DAOImpl<>();
+    private static final DAO<DoorDTO> DAO = new DAOImpl<>();  // ??????????? DoorDAOImpl include DAOIml<> methods. This line so useless.
 
-    public static void main(String[] args) {/*
+    public static void main(String[] args) {
+        runner("doors", DoorDTO.class, new DoorDAOImpl());
+    }
+
+    private Type setModelAndGetCorrespondingList2(Class<?> typeArgument) {
+        return TypeToken.getParameterized(typeArgument).getType();
+    }
+
+    private static void runner(String filename, Class<?> clazz, DAOImpl<?> DAO ){
         try {
-            List<DoorDTO> doorDTOList = GSON_MANAGER.readDoorsDTOList(DOORS_IN_FILE_PATH);
+
+
+
+            /*DAO<clazz> DAO_RUNNER = new DAOImpl<>(); */ // Any ideas how to select current impl. Now I try to use hack.
+            //Work good!
+            String path = IN_FILE_PATH.replaceFirst("\\?", filename);
+            var DTOList = GSON_MANAGER.readDTOList(path, clazz);
 
             System.out.println("List before save:");
-            doorDTOList.forEach(System.out::println);
+            DTOList.forEach(System.out::println);
+            // end
 
-            List<DoorDTO> dtoAfterSave = new ArrayList<>();
-            doorDTOList.forEach(ThrowingConsumerWrapper.accept(dto -> dtoAfterSave.add(DAO.save(dto, DoorDTO.class)), SQLException.class));
+            List<?> dtoAfterSave = new ArrayList<>();
+            DTOList.forEach(ThrowingConsumerWrapper.accept(dto -> dtoAfterSave.add(DAO.save(dto, clazz)), SQLException.class));
 
             if (!dtoAfterSave.isEmpty()) {
                 System.out.println("\nList after save: ");
@@ -56,8 +75,8 @@ public class DoorsApp {
             SQLConnection.closeConnection();
 
         } catch (IOException | SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
-*/
+
     }
 }

@@ -21,7 +21,7 @@ public class HouseApp {
     private static final HouseDAO HOUSE_DAO = new HouseDAOImpl();
     private static final DAO<HouseDTO> DAO = new DAOImpl<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {/*
         try {
             List<HouseDTO> houseDTOList = GSON_MANAGER.readHousesDTOList(HOUSES_IN_FILE_PATH);
             System.out.println("List before save:");
@@ -57,7 +57,7 @@ public class HouseApp {
 
         } catch (IOException | SQLException e) {
             System.out.println(e.getMessage());
-        }
+        }*/
     }
 
 }
